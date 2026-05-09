@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Calendar as CalendarIcon, Instagram, MessageCircle, MapPin, Check } from 'lucide-react';
+import { Calendar as CalendarIcon, Instagram, MessageCircle, MapPin, Check, Mountain } from 'lucide-react';
 import { OptimizedImage } from './OptimizedImage';
+import { BookingModal } from './BookingModal';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { useTranslation } from 'react-i18next';
@@ -205,6 +206,7 @@ export const Sanctuary: React.FC = () => {
   const { activeProperty, activePropertyId, loading: propertyLoading } = useProperty();
   const [data, setData] = useState<PropertyDetails>(DEFAULTS);
   const [loading, setLoading] = useState(true);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   // When the active property changes we re-subscribe to its per-property
   // settings doc and seed the view with the matching property record so the
@@ -264,32 +266,32 @@ export const Sanctuary: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-8 pb-12 animate-pulse bg-[#121212] min-h-screen">
+      <div className="space-y-8 pb-12 animate-pulse bg-[#E5E4E2] min-h-screen">
         <div className="px-6 mt-8 space-y-4">
-          <div className="h-4 bg-white/[0.06] rounded w-32" />
-          <div className="h-8 bg-white/[0.06] rounded w-64" />
+          <div className="h-4 bg-[#1B1B1B]/8 rounded-[6px] w-32" />
+          <div className="h-8 bg-[#1B1B1B]/8 rounded-[6px] w-64" />
           <div className="flex gap-4 overflow-hidden">
             {[1, 2, 3].map(i => (
               <div key={i} className="flex-none w-[85vw] md:w-[600px]">
-                <div className="aspect-[4/5] md:aspect-video rounded-[20px] bg-white/[0.04]" />
-                <div className="mt-3 h-3.5 bg-white/[0.06] rounded w-40 mx-1" />
+                <div className="aspect-[3/4] md:aspect-video rounded-[8px] bg-[#1B1B1B]/8 shadow-[10px_10px_25px_rgba(0,0,0,0.10)]" />
+                <div className="mt-3 h-3.5 bg-[#1B1B1B]/8 rounded-[6px] w-40 mx-1" />
               </div>
             ))}
           </div>
         </div>
         <div className="px-6 space-y-3">
-          <div className="h-6 bg-white/[0.06] rounded w-48" />
-          <div className="h-4 bg-white/[0.06] rounded w-full" />
-          <div className="h-4 bg-white/[0.06] rounded w-3/4" />
+          <div className="h-6 bg-[#1B1B1B]/8 rounded-[6px] w-48" />
+          <div className="h-4 bg-[#1B1B1B]/8 rounded-[6px] w-full" />
+          <div className="h-4 bg-[#1B1B1B]/8 rounded-[6px] w-3/4" />
         </div>
         <div className="px-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-full glass-card p-6 space-y-4">
-              <div className="h-5 bg-white/[0.06] rounded w-24" />
+            <div key={i} className="h-full stone-card p-6 space-y-4">
+              <div className="h-5 bg-[#1B1B1B]/8 rounded-[6px] w-24" />
               <div className="space-y-2.5">
-                <div className="h-4 bg-white/[0.06] rounded w-full" />
-                <div className="h-4 bg-white/[0.06] rounded w-3/4" />
-                <div className="h-4 bg-white/[0.06] rounded w-5/6" />
+                <div className="h-4 bg-[#1B1B1B]/8 rounded-[6px] w-full" />
+                <div className="h-4 bg-[#1B1B1B]/8 rounded-[6px] w-3/4" />
+                <div className="h-4 bg-[#1B1B1B]/8 rounded-[6px] w-5/6" />
               </div>
             </div>
           ))}
@@ -302,78 +304,81 @@ export const Sanctuary: React.FC = () => {
   const heroPrice = getMinPrice(data.pricing, data.nightly_rate);
 
   return (
-    <div className="space-y-14 pb-16 bg-[#121212]">
-      {/* Hero — full-bleed immersive image with a dark gradient overlay so
-          the white headline pops. Re-mounts on property switch for a clean
-          visual transition. */}
+    <div className="space-y-14 pb-16 bg-[#E5E4E2]">
+      {/* Hero — full-bleed mountain photo with a soft limestone fade so
+          the obsidian headline reads from above the fold. Re-mounts on
+          property switch for a clean visual transition. */}
       <motion.section
         key={activePropertyId || 'default'}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="relative w-full h-[72vh] min-h-[480px] overflow-hidden"
+        className="relative w-full h-[72vh] min-h-[480px] overflow-hidden group"
       >
         {heroImage && (
           <OptimizedImage
             src={heroImage}
             alt={bl(data.name, lang) as string}
-            className="absolute inset-0 w-full h-full"
+            className="stone-image absolute inset-0 w-full h-full"
           />
         )}
-        <div className="absolute inset-0 hero-overlay" />
+        <div className="absolute inset-0 hero-overlay-stone" />
         <div className="absolute inset-x-0 bottom-0 px-6 pb-12 max-w-5xl mx-auto">
-          <span className="text-[#FFBF00] font-bold tracking-architectural text-[10px] uppercase block mb-3 drop-shadow-[0_0_8px_rgba(255,191,0,0.4)]">
+          <span className="inline-flex items-center gap-1.5 text-[#B48E92] font-bold tracking-stone text-[10px] uppercase mb-3">
+            <Mountain size={12} strokeWidth={2.25} />
             {t('sanctuary.estatePreview')}
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-architectural leading-tight">
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1B1B1B] tracking-stone uppercase leading-tight">
             {bl(data.name, lang)}
           </h2>
-          <p className="mt-4 max-w-2xl text-[#A0A0A0] text-sm sm:text-base leading-relaxed">
+          <p className="mt-4 max-w-2xl text-[#1B1B1B]/70 text-sm sm:text-base leading-relaxed">
             {bl(data.description, lang)}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <button
-              onClick={() => navigate('/booking')}
-              className="inline-flex items-center gap-2 rounded-full
-                         bg-[#FFBF00] text-black px-7 py-3
-                         text-xs font-extrabold uppercase tracking-architectural
-                         amber-glow hover:bg-[#FFD15C] hover:shadow-[0_0_36px_rgba(255,191,0,0.55)]
-                         transition-all duration-500 active:scale-[0.97]"
+              onClick={() => setBookingOpen(true)}
+              className="inline-flex items-center gap-2 rounded-[8px]
+                         bg-[#4B5320] text-[#F9F9F9] px-7 py-3
+                         text-xs font-bold uppercase tracking-chiseled
+                         shadow-[10px_10px_25px_rgba(0,0,0,0.18)]
+                         hover:bg-[#3A4019]
+                         hover:shadow-[0_0_18px_rgba(180,142,146,0.55),10px_10px_25px_rgba(0,0,0,0.20)]
+                         transition-all duration-500 active:scale-95"
             >
               <CalendarIcon size={16} />
               {t('sanctuary.bookNow')}
             </button>
-            <span className="text-xs uppercase tracking-architectural text-[#A0A0A0]">
+            <span className="text-xs uppercase tracking-chiseled text-[#1B1B1B]/65">
               {t('sanctuary.from')}{' '}
-              <span className="text-[#FFBF00] font-bold">{heroPrice} {t('common.omr')}</span>{' '}
+              <span className="text-[#4B5320] font-bold">{heroPrice} {t('common.omr')}</span>{' '}
               {t('common.perNight')}
             </span>
           </div>
         </div>
       </motion.section>
 
-      {/* Gallery strip — dark cards with subtle white borders. */}
+      {/* Gallery strip — chiseled stone cards, images desaturate on hover. */}
       <section className="px-6 max-w-6xl mx-auto">
-        <h3 className="font-display text-sm font-bold uppercase tracking-architectural text-[#A0A0A0] mb-4">
+        <h3 className="font-display text-sm font-bold uppercase tracking-stone text-[#4B5320] mb-4">
           {bl(data.headline, lang)}
         </h3>
-        <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 pb-2">
+        <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-5 pb-3">
           {data.gallery.map((img, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08, duration: 0.5 }}
-              whileHover={{ scale: 1.02 }}
-              className="flex-none w-[85vw] md:w-[560px] snap-center glass-card overflow-hidden"
+              whileHover={{ y: -4 }}
+              className="group flex-none w-[78vw] md:w-[420px] snap-center stone-card overflow-hidden"
             >
               <OptimizedImage
                 src={img.url}
                 alt={img.label || ''}
-                className="aspect-[4/5] md:aspect-video"
+                className="stone-image aspect-[3/4] md:aspect-[4/5]"
               />
               {img.label && img.label.trim() !== '' && (
-                <p className="px-5 py-3 font-bold text-white text-xs uppercase tracking-architectural">
+                <p className="px-5 py-3 font-bold text-[#1B1B1B] text-xs uppercase tracking-chiseled bg-[#EFEEEC] border-t border-[#1B1B1B]/10">
                   {img.label}
                 </p>
               )}
@@ -386,11 +391,12 @@ export const Sanctuary: React.FC = () => {
             {data.amenities.map((a, i) => (
               <span
                 key={`${activePropertyId}-amenity-${i}`}
-                className="inline-flex items-center gap-2 rounded-full
-                           bg-white/[0.04] border border-white/[0.08]
-                           text-[#A0A0A0] px-3 py-1.5 text-[11px] font-bold uppercase tracking-architectural"
+                className="inline-flex items-center gap-2 rounded-[8px]
+                           bg-white border border-[#1B1B1B]/10
+                           text-[#1B1B1B]/80 px-3 py-1.5 text-[11px] font-bold uppercase tracking-chiseled
+                           shadow-[4px_4px_10px_rgba(0,0,0,0.08)]"
               >
-                <Check size={12} className="icon-amber" />
+                <Check size={12} className="icon-rose" />
                 {a}
               </span>
             ))}
@@ -398,7 +404,7 @@ export const Sanctuary: React.FC = () => {
         )}
       </section>
 
-      {/* Resort Guide — glassmorphic dark feature tiles, amber icons. */}
+      {/* Resort Guide — chiseled stone tiles with Juniper section titles. */}
       {data.featureSections && data.featureSections.length > 0 && (
         <section className="px-6 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
@@ -410,12 +416,12 @@ export const Sanctuary: React.FC = () => {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05, duration: 0.5 }}
-                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileHover={{ y: -4 }}
                   dir={lang === 'ar' ? 'rtl' : 'ltr'}
-                  className="h-full glass-card p-6 transition-shadow duration-500
-                             hover:shadow-[0_20px_60px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,191,0,0.18)]"
+                  className="h-full stone-card p-6 transition-shadow duration-500
+                             hover:shadow-[14px_14px_40px_rgba(0,0,0,0.22),0_0_0_1px_rgba(180,142,146,0.45)]"
                 >
-                  <h4 className="font-display text-sm font-extrabold uppercase tracking-architectural text-[#FFBF00] mb-4">
+                  <h4 className="font-display text-sm font-bold uppercase tracking-stone text-[#4B5320] mb-4">
                     {title}
                   </h4>
                   <ul className="space-y-3">
@@ -423,8 +429,8 @@ export const Sanctuary: React.FC = () => {
                       const label = lang === 'ar' ? (item.ar || item.en) : (item.en || item.ar);
                       return (
                         <li key={j} className="flex items-start gap-3">
-                          <Check size={14} strokeWidth={2.5} className="icon-amber shrink-0 mt-[5px]" />
-                          <span className="text-sm font-medium text-[#A0A0A0] leading-relaxed">
+                          <Check size={14} strokeWidth={2.5} className="icon-rose shrink-0 mt-[5px]" />
+                          <span className="text-sm font-medium text-[#1B1B1B]/80 leading-relaxed">
                             {label}
                           </span>
                         </li>
@@ -450,17 +456,34 @@ export const Sanctuary: React.FC = () => {
         onAbout={() => navigate('/about')}
       />
 
-      {/* Floating Book Now — amber pill with constant glow. */}
+      {/* Floating Book Now — Juniper slab with Rose halo on hover. */}
       <button
-        onClick={() => navigate('/booking')}
+        onClick={() => setBookingOpen(true)}
         className="fixed bottom-[104px] end-[24px] z-[60] flex items-center gap-2
-                   bg-[#FFBF00] text-black px-6 py-3.5 rounded-[20px]
-                   amber-glow-lg hover:bg-[#FFD15C]
-                   transition-transform duration-500 hover:scale-105 active:scale-95"
+                   bg-[#4B5320] text-[#F9F9F9] px-6 py-3.5 rounded-[8px]
+                   shadow-[10px_10px_25px_rgba(0,0,0,0.22)]
+                   hover:bg-[#3A4019]
+                   hover:shadow-[0_0_24px_rgba(180,142,146,0.55),10px_10px_25px_rgba(0,0,0,0.22)]
+                   transition-all duration-500 hover:scale-105 active:scale-95"
       >
         <CalendarIcon size={20} />
-        <span className="font-extrabold text-xs uppercase tracking-architectural">{t('sanctuary.bookNow')}</span>
+        <span className="font-bold text-xs uppercase tracking-chiseled">{t('sanctuary.bookNow')}</span>
       </button>
+
+      {/* Mist-Effect Booking Modal — opens when guest taps the floating CTA
+          or the hero "Book Now". Stays mounted in the React tree (with its
+          own AnimatePresence) so the entrance/exit animation is smooth. */}
+      <BookingModal
+        open={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+        propertyName={bl(data.name, lang) as string}
+        priceLine={`${t('sanctuary.from')} ${heroPrice} ${t('common.omr')} / ${t('common.perNight')}`}
+        onSubmit={() => {
+          setBookingOpen(false);
+          navigate('/booking');
+        }}
+        submitLabel={t('sanctuary.bookNow') as string}
+      />
     </div>
   );
 };

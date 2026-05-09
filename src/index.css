@@ -1,37 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Noto+Serif:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Onyx & Amber — Executive Dark Mode typography stack.
-     Inter is the workhorse; Montserrat is reserved for hero / display. */
-  --font-headline: "Montserrat", "Inter", sans-serif;
-  --font-body: "Inter", "Plus Jakarta Sans", sans-serif;
-  --font-lato: "Inter", "Lato", sans-serif;
-  --font-arabic: "IBM Plex Sans Arabic", sans-serif;
-  --font-display: "Montserrat", "Inter", sans-serif;
+  /* Stone & Rose — Jabal Akhdar mountain-luxury typography stack.
+     Cinzel for stone-carved headings, Cormorant for editorial pull-quotes,
+     Montserrat for body. */
+  --font-headline: "Cinzel", "Cormorant Garamond", serif;
+  --font-display: "Cinzel", "Cormorant Garamond", serif;
+  --font-editorial: "Cormorant Garamond", "Cinzel", serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
+  --font-lato: "Montserrat", system-ui, sans-serif;
+  --font-arabic: "Cairo", "IBM Plex Sans Arabic", sans-serif;
 
-  /* Legacy brand tokens — kept so the admin portal renders unchanged. */
-  --color-primary-navy: #5C3D1E;
-  --color-secondary-gold: #A67C52;
-  --color-pearl-white: #F0EBE4;
+  /* Legacy brand tokens — re-mapped onto the Stone & Rose palette so every
+     existing utility (text-primary-navy, bg-pearl-white, bg-secondary-gold,
+     etc.) shifts to the new theme without per-component edits. */
+  --color-pearl-white: #E5E4E2;     /* Limestone Grey — base canvas */
+  --color-primary-navy: #1B1B1B;    /* Obsidian — primary text + dark surfaces */
+  --color-secondary-gold: #4B5320;  /* Juniper Green — primary accent */
 
-  /* Onyx & Amber palette — used by the guest-facing surfaces. */
-  --color-onyx: #121212;            /* Deep matte black — base canvas */
-  --color-onyx-elevated: #1D1D1D;   /* Layer 1 — cards, sticky bars */
-  --color-onyx-card: #2A2A2A;       /* Layer 2 — modals, hover surfaces */
-  --color-onyx-line: #2F2F2F;       /* Hairline dividers */
-  --color-amber: #FFBF00;           /* Primary accent — buttons, active */
-  --color-amber-soft: #FFD15C;      /* Hover / highlight */
-  --color-amber-glow: rgba(255, 191, 0, 0.3);
-  --color-pure-white: #FFFFFF;      /* Headings */
-  --color-silver: #A0A0A0;          /* Body copy */
-  --color-silver-dim: #6B6B6B;      /* Captions, disabled */
+  /* Stone & Rose semantic palette. */
+  --color-limestone: #E5E4E2;       /* Page background */
+  --color-limestone-soft: #EFEEEC;  /* Hover / soft surface */
+  --color-slate: #2F353B;           /* Midnight Slate — deep contrast sections */
+  --color-slate-deep: #20262B;      /* Pressed / active slate */
+  --color-juniper: #4B5320;         /* Primary accent — buttons, success */
+  --color-juniper-deep: #3A4019;    /* Pressed juniper */
+  --color-juniper-light: #6B7438;   /* Hover juniper */
+  --color-rose: #B48E92;            /* Soft accent — icons, badges, highlights */
+  --color-rose-soft: #C9A6AA;       /* Hover rose */
+  --color-rose-glow: rgba(180, 142, 146, 0.45);
+  --color-obsidian: #1B1B1B;        /* Primary text */
+  --color-off-white: #F9F9F9;       /* Text on dark backgrounds */
+  --color-stone-line: rgba(27, 27, 27, 0.10); /* Hairline divider */
 
-  --radius-2xl: 1.25rem;
+  /* Chiseled geometry — flat-ish corners, never bubbly. */
+  --radius-stone: 8px;
+  --radius-2xl: 8px;
 
-  /* Shared shadows so amber glow stays consistent across components. */
-  --shadow-amber: 0 0 20px rgba(255, 191, 0, 0.3);
-  --shadow-amber-lg: 0 0 36px rgba(255, 191, 0, 0.45);
+  /* Heavy offset shadows — give components weight like stone blocks. */
+  --shadow-stone: 10px 10px 25px rgba(0, 0, 0, 0.15);
+  --shadow-stone-sm: 6px 6px 14px rgba(0, 0, 0, 0.12);
+  --shadow-stone-lg: 14px 14px 40px rgba(0, 0, 0, 0.22);
+  --shadow-rose-glow: 0 0 18px rgba(180, 142, 146, 0.55);
+  /* Recessed inner shadow — used on the property toggle "groove". */
+  --shadow-recess: inset 4px 4px 10px rgba(0, 0, 0, 0.18), inset -2px -2px 6px rgba(255, 255, 255, 0.6);
 }
 
 @layer base {
@@ -112,162 +125,233 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Onyx & Amber — Executive Dark Mode utilities
+   Stone & Rose — Jabal Akhdar mountain-luxury utilities
    --------------------------------------------------------------------------- */
 
-/* Glassmorphism surface for property cards + the booking modal. */
-.glass-card {
-  background: rgba(29, 29, 29, 0.55);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1.25rem;
+/* Chiseled stone block — the workhorse surface for cards, modals, panels.
+   Flat 8px corners + heavy offset shadow give it the weight of a hewn block. */
+.stone-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-stone-line);
+  border-radius: 8px;
+  box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.glass-card--solid {
-  background: linear-gradient(180deg, rgba(42, 42, 42, 0.85) 0%, rgba(29, 29, 29, 0.85) 100%);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1.25rem;
+.stone-card--limestone {
+  background: #EFEEEC;
+  border: 1px solid var(--color-stone-line);
+  border-radius: 8px;
+  box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.amber-glow {
-  box-shadow: 0 0 20px rgba(255, 191, 0, 0.3);
+/* Slate (Midnight) panel — deep-contrast section, off-white type. */
+.slate-panel {
+  position: relative;
+  background-color: #2F353B;
+  color: #F9F9F9;
+  border-radius: 8px;
+  box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  isolation: isolate;
 }
-.amber-glow-lg {
-  box-shadow: 0 0 36px rgba(255, 191, 0, 0.45);
-}
-
-/* Architectural letter-spacing for headers — wider than tracking-wider. */
-.tracking-architectural {
-  letter-spacing: 0.18em;
-}
-
-/* Amber icon w/ soft outer glow — used for amenity icons. */
-.icon-amber {
-  color: #FFBF00;
-  filter: drop-shadow(0 0 6px rgba(255, 191, 0, 0.45));
+.slate-panel > * {
+  position: relative;
+  z-index: 1;
 }
 
-/* Hero gradient overlay — drops behind a hero image so white text pops. */
-.hero-overlay {
+/* Inline SVG noise/grain — pinned over slate sections to mimic rock texture.
+   The data-URI keeps it dependency-free and fully bundled. */
+.stone-noise::before,
+.slate-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+}
+
+/* Recessed groove — used by the property toggle. Dark inset on a stone face
+   with a faint highlight on the bottom edge so it reads as carved-in. */
+.stone-groove {
+  background: linear-gradient(180deg, #D8D6D3 0%, #ECEAE7 100%);
+  border-radius: 8px;
+  box-shadow:
+    inset 4px 4px 10px rgba(0, 0, 0, 0.18),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(27, 27, 27, 0.06);
+}
+
+/* Mist — backdrop-filter for the booking modal. Cloud passing over rock. */
+.mist-surface {
+  background: rgba(249, 249, 249, 0.72);
+  backdrop-filter: blur(15px) grayscale(20%) saturate(110%);
+  -webkit-backdrop-filter: blur(15px) grayscale(20%) saturate(110%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
+  box-shadow: 14px 14px 40px rgba(0, 0, 0, 0.22);
+}
+
+.mist-backdrop {
+  background: rgba(47, 53, 59, 0.45);
+  backdrop-filter: blur(15px) grayscale(20%);
+  -webkit-backdrop-filter: blur(15px) grayscale(20%);
+}
+
+/* Soft Rose halo — used behind active toggle buttons and hover states. */
+.rose-glow {
+  box-shadow: 0 0 18px rgba(180, 142, 146, 0.55);
+}
+.rose-glow-soft {
+  box-shadow: 0 0 24px rgba(180, 142, 146, 0.35);
+}
+
+/* Rose-tinted icon — for amenity icons + availability indicators. */
+.icon-rose {
+  color: #B48E92;
+}
+.icon-juniper {
+  color: #4B5320;
+}
+
+/* Stone-carved headers — uppercase + extra-wide tracking. */
+.tracking-stone {
+  letter-spacing: 0.22em;
+}
+.tracking-chiseled {
+  letter-spacing: 0.16em;
+}
+
+/* Image desaturation on hover — emphasizes the "stone" aesthetic. */
+.stone-image {
+  filter: saturate(1) contrast(1);
+  transition: filter 700ms ease, transform 700ms ease;
+}
+.group:hover .stone-image,
+.stone-image:hover {
+  filter: saturate(0.6) contrast(1.05);
+  transform: scale(1.02);
+}
+
+/* Tactile press — apply to any interactive surface. */
+.tactile {
+  transition: transform 150ms ease, box-shadow 250ms ease;
+}
+.tactile:active {
+  transform: scale(0.95);
+}
+
+/* Hero gradient overlay — light variant so Slate text reads on a photo. */
+.hero-overlay-stone {
   background: linear-gradient(
     180deg,
-    rgba(18, 18, 18, 0.35) 0%,
-    rgba(18, 18, 18, 0.65) 60%,
-    rgba(18, 18, 18, 0.95) 100%
+    rgba(229, 228, 226, 0) 0%,
+    rgba(229, 228, 226, 0.35) 55%,
+    rgba(229, 228, 226, 0.92) 100%
+  );
+}
+/* Inverse overlay — light photo with off-white text on top. */
+.hero-overlay-slate {
+  background: linear-gradient(
+    180deg,
+    rgba(47, 53, 59, 0.20) 0%,
+    rgba(47, 53, 59, 0.55) 60%,
+    rgba(47, 53, 59, 0.85) 100%
   );
 }
 
-/* Onyx scope — opt in by adding `data-theme="onyx"` to a container.
-   Lets the guest-facing tree render dark without flipping admin pages. */
-[data-theme="onyx"] {
-  background-color: #121212;
-  color: #A0A0A0;
-}
-[data-theme="onyx"] h1,
-[data-theme="onyx"] h2,
-[data-theme="onyx"] h3,
-[data-theme="onyx"] h4,
-[data-theme="onyx"] h5,
-[data-theme="onyx"] h6 {
-  color: #FFFFFF;
-}
-
-/* ---------------------------------------------------------------------------
-   Scoped Onyx overrides — re-map the legacy brand utility classes
-   (text-primary-navy, bg-white, bg-surface-container-low, secondary-gold,
-   etc.) to the Onyx & Amber palette wherever they appear inside an
-   element marked data-theme="onyx". The admin portal does not set this
-   attribute, so its navy/gold styling is untouched.
-   --------------------------------------------------------------------------- */
-
-[data-theme="onyx"] .bg-white,
-[data-theme="onyx"] .bg-pearl-white {
-  background-color: #1D1D1D;
-  color: #A0A0A0;
-}
-[data-theme="onyx"] .bg-surface-container-low {
-  background-color: #1D1D1D;
-}
-
-/* Surfaces that were translucent dark on light should become translucent
-   light on dark. */
-[data-theme="onyx"] .bg-primary-navy\/3 { background-color: rgba(255, 255, 255, 0.03); }
-[data-theme="onyx"] .bg-primary-navy\/5 { background-color: rgba(255, 255, 255, 0.05); }
-[data-theme="onyx"] .bg-primary-navy\/10 { background-color: rgba(255, 255, 255, 0.08); }
-
-[data-theme="onyx"] .border-primary-navy\/5 { border-color: rgba(255, 255, 255, 0.06); }
-[data-theme="onyx"] .border-primary-navy\/10 { border-color: rgba(255, 255, 255, 0.10); }
-[data-theme="onyx"] .border-primary-navy\/20 { border-color: rgba(255, 255, 255, 0.16); }
-[data-theme="onyx"] .border-primary-navy { border-color: #FFBF00; }
-
-/* Solid dark backgrounds (e.g. admin sidebar reused on guest side) become
-   the elevated card surface so they sit one layer above onyx. */
-[data-theme="onyx"] .bg-primary-navy { background-color: #2A2A2A; }
-
-/* Typography re-mapping. White for emphasis, Silver for body, dim silver
-   for low-priority captions. */
-[data-theme="onyx"] .text-primary-navy { color: #FFFFFF; }
-[data-theme="onyx"] .text-primary-navy\/85 { color: rgba(255, 255, 255, 0.85); }
-[data-theme="onyx"] .text-primary-navy\/80 { color: rgba(255, 255, 255, 0.80); }
-[data-theme="onyx"] .text-primary-navy\/70 { color: rgba(255, 255, 255, 0.70); }
-[data-theme="onyx"] .text-primary-navy\/60 { color: #A0A0A0; }
-[data-theme="onyx"] .text-primary-navy\/50 { color: #A0A0A0; }
-[data-theme="onyx"] .text-primary-navy\/40 { color: #6B6B6B; }
-[data-theme="onyx"] .text-primary-navy\/30 { color: #4A4A4A; }
-[data-theme="onyx"] .text-primary-navy\/20 { color: #3A3A3A; }
-
-/* Gold becomes Amber. */
-[data-theme="onyx"] .text-secondary-gold { color: #FFBF00; }
-[data-theme="onyx"] .bg-secondary-gold { background-color: #FFBF00; color: #000; }
-[data-theme="onyx"] .bg-secondary-gold\/5  { background-color: rgba(255, 191, 0, 0.05); }
-[data-theme="onyx"] .bg-secondary-gold\/10 { background-color: rgba(255, 191, 0, 0.10); }
-[data-theme="onyx"] .bg-secondary-gold\/15 { background-color: rgba(255, 191, 0, 0.15); }
-[data-theme="onyx"] .bg-secondary-gold\/20 { background-color: rgba(255, 191, 0, 0.20); }
-[data-theme="onyx"] .border-secondary-gold\/30 { border-color: rgba(255, 191, 0, 0.35); }
-[data-theme="onyx"] .border-secondary-gold\/10 { border-color: rgba(255, 191, 0, 0.18); }
-
-/* Amber buttons in Onyx mode get the signature glow. */
-[data-theme="onyx"] .bg-secondary-gold {
-  box-shadow: 0 0 20px rgba(255, 191, 0, 0.3);
-}
-
-/* Dark calendar — selected = amber, unavailable = dimmed silver. */
-.calendar-onyx {
-  --cal-bg: #1D1D1D;
-  --cal-border: rgba(255, 255, 255, 0.08);
-  --cal-text: #A0A0A0;
-  --cal-text-strong: #FFFFFF;
-  --cal-disabled: #4A4A4A;
+/* Stone-themed calendar tokens. Selected = Juniper, hover = Rose tint. */
+.calendar-stone {
+  --cal-bg: #FFFFFF;
+  --cal-border: rgba(27, 27, 27, 0.10);
+  --cal-text: #1B1B1B;
+  --cal-disabled: rgba(27, 27, 27, 0.25);
   background: var(--cal-bg);
   color: var(--cal-text);
   border: 1px solid var(--cal-border);
-  border-radius: 1.25rem;
+  border-radius: 8px;
 }
-.calendar-onyx .cal-day {
+.calendar-stone .cal-day {
   color: var(--cal-text);
-  border-radius: 0.625rem;
-  transition: background-color 200ms ease, color 200ms ease, transform 200ms ease;
+  border-radius: 6px;
+  transition: background-color 200ms ease, color 200ms ease, transform 150ms ease;
 }
-.calendar-onyx .cal-day:hover:not(.is-disabled):not(.is-selected) {
-  background: rgba(255, 191, 0, 0.08);
-  color: var(--cal-text-strong);
+.calendar-stone .cal-day:hover:not(.is-disabled):not(.is-selected) {
+  background: rgba(180, 142, 146, 0.18);
 }
-.calendar-onyx .cal-day.is-selected {
-  background: #FFBF00;
-  color: #FFFFFF;
-  box-shadow: 0 0 16px rgba(255, 191, 0, 0.45);
+.calendar-stone .cal-day.is-selected {
+  background: #4B5320;
+  color: #F9F9F9;
+  box-shadow: 0 0 14px rgba(180, 142, 146, 0.55);
 }
-.calendar-onyx .cal-day.is-in-range {
-  background: rgba(255, 191, 0, 0.18);
-  color: #FFFFFF;
+.calendar-stone .cal-day.is-in-range {
+  background: rgba(75, 83, 32, 0.18);
+  color: #1B1B1B;
 }
-.calendar-onyx .cal-day.is-disabled {
+.calendar-stone .cal-day.is-disabled {
   color: var(--cal-disabled);
   text-decoration: line-through;
   cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------------------------
+   Scoped Stone overrides — re-map the legacy brand utility classes onto
+   the Stone & Rose palette wherever they appear inside an element marked
+   data-theme="stone". The admin portal omits the attribute, so its
+   original styling is untouched.
+   --------------------------------------------------------------------------- */
+
+[data-theme="stone"] {
+  background-color: #E5E4E2;
+  color: #1B1B1B;
+}
+
+/* Solid surfaces — white cards become true white, pearl-white inherits limestone. */
+[data-theme="stone"] .bg-pearl-white { background-color: #E5E4E2; }
+[data-theme="stone"] .bg-surface-container-low { background-color: #EFEEEC; }
+
+/* Translucent dark surfaces stay translucent dark, just on the new obsidian hue. */
+[data-theme="stone"] .bg-primary-navy\/3  { background-color: rgba(27, 27, 27, 0.03); }
+[data-theme="stone"] .bg-primary-navy\/5  { background-color: rgba(27, 27, 27, 0.05); }
+[data-theme="stone"] .bg-primary-navy\/10 { background-color: rgba(27, 27, 27, 0.08); }
+
+[data-theme="stone"] .border-primary-navy\/5  { border-color: rgba(27, 27, 27, 0.06); }
+[data-theme="stone"] .border-primary-navy\/10 { border-color: rgba(27, 27, 27, 0.10); }
+[data-theme="stone"] .border-primary-navy\/20 { border-color: rgba(27, 27, 27, 0.18); }
+
+/* Dark sidebar surfaces become Midnight Slate. */
+[data-theme="stone"] .bg-primary-navy { background-color: #2F353B; color: #F9F9F9; }
+
+/* Typography — Obsidian for emphasis, soft greys for secondary copy. */
+[data-theme="stone"] .text-primary-navy        { color: #1B1B1B; }
+[data-theme="stone"] .text-primary-navy\/85    { color: rgba(27, 27, 27, 0.85); }
+[data-theme="stone"] .text-primary-navy\/80    { color: rgba(27, 27, 27, 0.80); }
+[data-theme="stone"] .text-primary-navy\/70    { color: rgba(27, 27, 27, 0.70); }
+[data-theme="stone"] .text-primary-navy\/60    { color: rgba(27, 27, 27, 0.60); }
+[data-theme="stone"] .text-primary-navy\/50    { color: rgba(27, 27, 27, 0.50); }
+[data-theme="stone"] .text-primary-navy\/40    { color: rgba(27, 27, 27, 0.40); }
+[data-theme="stone"] .text-primary-navy\/30    { color: rgba(27, 27, 27, 0.28); }
+[data-theme="stone"] .text-primary-navy\/20    { color: rgba(27, 27, 27, 0.20); }
+
+/* Gold tokens become Juniper Green. */
+[data-theme="stone"] .text-secondary-gold { color: #4B5320; }
+[data-theme="stone"] .bg-secondary-gold   { background-color: #4B5320; color: #F9F9F9; }
+[data-theme="stone"] .bg-secondary-gold\/5   { background-color: rgba(75, 83, 32, 0.05); }
+[data-theme="stone"] .bg-secondary-gold\/10  { background-color: rgba(75, 83, 32, 0.10); }
+[data-theme="stone"] .bg-secondary-gold\/15  { background-color: rgba(75, 83, 32, 0.15); }
+[data-theme="stone"] .bg-secondary-gold\/20  { background-color: rgba(75, 83, 32, 0.22); }
+[data-theme="stone"] .border-secondary-gold\/10 { border-color: rgba(75, 83, 32, 0.18); }
+[data-theme="stone"] .border-secondary-gold\/30 { border-color: rgba(75, 83, 32, 0.35); }
+
+/* Stone radii everywhere — replace the bubbly 20px / 24px corners with 8px. */
+[data-theme="stone"] .rounded-\[20px\],
+[data-theme="stone"] .rounded-\[24px\],
+[data-theme="stone"] .rounded-2xl,
+[data-theme="stone"] .rounded-xl {
+  border-radius: 8px;
 }
 
 /* ---------------------------------------------------------------------------

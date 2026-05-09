@@ -33,18 +33,18 @@ export const ClientLayout: React.FC = () => {
   };
 
   return (
-    // `data-theme="onyx"` scopes the dark canvas + heading colors so the
-    // admin portal (which keeps the brand-navy palette) is unaffected.
-    <div data-theme="onyx" className="min-h-screen bg-[#121212] text-[#A0A0A0] flex flex-col">
-      {/* Onyx Header — translucent matte-black glass with a hairline
-          divider; the wordmark uses architectural tracking for a watch-brand
-          feel. The brand lockup is allowed to shrink so the property toggle
-          never overflows. */}
+    // `data-theme="stone"` scopes the limestone canvas + Stone & Rose
+    // re-mappings to the entire guest tree. The admin portal omits the
+    // attribute and keeps the brand-navy palette.
+    <div data-theme="stone" className="min-h-screen bg-[#E5E4E2] text-[#1B1B1B] flex flex-col">
+      {/* Stone & Rose Header — limestone bar with a hewn slate edge.
+          Sticky so the wordmark + recessed property toggle ride alongside
+          the page. The brand lockup shrinks so the toggle never overflows. */}
       <header
         className="fixed top-0 w-full z-50 h-16 px-3 sm:px-6 flex items-center justify-between gap-2
-                   bg-[#121212]/75 backdrop-blur-xl
-                   border-b border-white/[0.08]
-                   shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+                   bg-[#E5E4E2]/92 backdrop-blur-md
+                   border-b border-[#1B1B1B]/10
+                   shadow-[0_10px_25px_rgba(0,0,0,0.10)]"
       >
         <Link
           to="/"
@@ -55,28 +55,32 @@ export const ClientLayout: React.FC = () => {
             <img
               src={config.logoPath}
               alt=""
-              className="h-9 w-9 rounded-md object-contain bg-white/5 ring-1 ring-white/10 p-0.5 shrink-0
-                         transition-shadow duration-500 group-hover:shadow-[0_0_18px_rgba(255,191,0,0.35)]"
+              className="h-9 w-9 rounded-[6px] object-contain bg-white p-0.5 shrink-0
+                         border border-[#1B1B1B]/10
+                         shadow-[4px_4px_10px_rgba(0,0,0,0.10)]
+                         transition-shadow duration-500
+                         group-hover:shadow-[0_0_18px_rgba(180,142,146,0.55)]"
               onError={(e) => { (e.currentTarget.style.display = 'none'); }}
             />
           )}
           <span
-            className="hidden md:inline font-display text-lg font-extrabold uppercase truncate
-                       text-white tracking-architectural
-                       transition-colors duration-500 group-hover:text-[#FFBF00]"
+            className="hidden md:inline font-display text-lg font-bold uppercase truncate
+                       text-[#1B1B1B] tracking-stone
+                       transition-colors duration-500 group-hover:text-[#4B5320]"
           >
             {t('common.alMalak')}
           </span>
         </Link>
 
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          {/* High-end segmented control — sliding amber background. */}
-          <PropertyToggle variant="onyx" />
+          {/* Recessed-groove segmented control — Juniper active + Rose halo. */}
+          <PropertyToggle variant="stone" />
           <LanguageToggle />
           {isAdmin && (
             <button
               onClick={() => navigate('/admin')}
-              className="p-2 rounded-full text-[#A0A0A0] hover:text-[#FFBF00] hover:bg-white/5 transition-colors duration-500"
+              className="p-2 rounded-[8px] text-[#1B1B1B]/55 hover:text-[#4B5320]
+                         hover:bg-[#B48E92]/15 transition-colors duration-500 tactile"
               title={t('nav.adminPortal')}
               aria-label={t('nav.adminPortal')}
             >
@@ -86,9 +90,9 @@ export const ClientLayout: React.FC = () => {
           {user ? (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-xl
-                         text-[#A0A0A0] hover:text-white hover:bg-white/5
-                         transition-colors duration-500 text-xs font-bold uppercase tracking-architectural"
+              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-[8px]
+                         text-[#1B1B1B]/70 hover:text-[#1B1B1B] hover:bg-[#B48E92]/15
+                         transition-colors duration-500 text-xs font-bold uppercase tracking-chiseled tactile"
               title={t('nav.logout')}
               aria-label={t('nav.logout')}
             >
@@ -98,10 +102,11 @@ export const ClientLayout: React.FC = () => {
           ) : (
             <button
               onClick={() => navigate('/login')}
-              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-xl
-                         bg-[#FFBF00] text-black text-xs font-bold uppercase tracking-architectural
-                         amber-glow hover:bg-[#FFD15C] hover:shadow-[0_0_28px_rgba(255,191,0,0.55)]
-                         transition-all duration-500 active:scale-[0.97]"
+              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-[8px]
+                         bg-[#4B5320] text-[#F9F9F9] text-xs font-bold uppercase tracking-chiseled
+                         shadow-[6px_6px_14px_rgba(0,0,0,0.18)]
+                         hover:bg-[#3A4019] hover:shadow-[0_0_18px_rgba(180,142,146,0.55),6px_6px_14px_rgba(0,0,0,0.20)]
+                         transition-all duration-500 active:scale-95"
               title={t('nav.login')}
               aria-label={t('nav.login')}
             >
@@ -120,13 +125,12 @@ export const ClientLayout: React.FC = () => {
         <Footer />
       </main>
 
-      {/* Onyx Bottom Nav — layered surface, amber active state with glow. */}
+      {/* Stone & Rose Bottom Nav — Midnight Slate slab with a noise overlay
+          mimicking rock texture; active item glows Rose. */}
       <nav
-        className="fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-20 pb-safe px-12
-                   bg-[#1D1D1D]/90 backdrop-blur-xl
-                   border-t border-white/[0.08]
-                   shadow-[0_-10px_40px_rgba(0,0,0,0.6)]
-                   rounded-t-[20px]"
+        className="slate-panel fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-20 pb-safe px-12
+                   border-t border-white/10
+                   rounded-t-[8px]"
       >
         {navItems.map((item) => {
           const active = isActive(item.path);
@@ -135,16 +139,16 @@ export const ClientLayout: React.FC = () => {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={cn(
-                'flex flex-col items-center justify-center transition-all duration-500',
-                active ? 'text-[#FFBF00] scale-110' : 'text-[#6B6B6B] hover:text-[#A0A0A0]',
+                'flex flex-col items-center justify-center transition-all duration-500 active:scale-95',
+                active ? 'text-[#B48E92] scale-110' : 'text-[#F9F9F9]/55 hover:text-[#F9F9F9]',
               )}
             >
               <item.icon
                 size={24}
                 fill={active ? 'currentColor' : 'none'}
-                className={active ? 'drop-shadow-[0_0_8px_rgba(255,191,0,0.55)]' : ''}
+                className={active ? 'drop-shadow-[0_0_8px_rgba(180,142,146,0.65)]' : ''}
               />
-              <span className="text-[11px] font-bold uppercase tracking-architectural mt-1">
+              <span className="text-[11px] font-bold uppercase tracking-chiseled mt-1">
                 {t(item.labelKey)}
               </span>
             </button>
