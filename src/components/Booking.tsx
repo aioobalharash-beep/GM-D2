@@ -726,10 +726,13 @@ export const Booking: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-8 animate-pulse"><div className="h-96 bg-primary-navy/5 rounded-xl" /></div>;
+  if (loading) return <div className="p-8 animate-pulse"><div className="h-96 bg-white/[0.04] rounded-xl" /></div>;
 
   return (
-    <div className="px-4 py-6 sm:px-6 space-y-10 max-w-lg mx-auto">
+    // The outer ClientLayout already sets data-theme="onyx", but we add the
+    // canvas color here so this section also looks correct when rendered
+    // standalone (e.g. inside the booking modal or storybook).
+    <div className="bg-[#121212] min-h-screen px-4 py-6 sm:px-6 space-y-10 max-w-lg mx-auto">
       {/* Back Button */}
       <button
         onClick={() => navigate('/')}
@@ -739,9 +742,9 @@ export const Booking: React.FC = () => {
         {t('login.backToHome')}
       </button>
 
-      <section className="text-center space-y-2">
-        <span className="text-secondary-gold font-bold tracking-widest text-[10px] uppercase">{t('booking.bookYourStay')}</span>
-        <h2 className="font-headline text-2xl sm:text-4xl font-bold text-primary-navy">{t('booking.selectDates')}</h2>
+      <section className="text-center space-y-3">
+        <span className="text-secondary-gold font-bold tracking-architectural text-[10px] uppercase drop-shadow-[0_0_8px_rgba(255,191,0,0.45)]">{t('booking.bookYourStay')}</span>
+        <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-primary-navy tracking-architectural">{t('booking.selectDates')}</h2>
         <p className="text-primary-navy/60 text-sm max-w-xs mx-auto">
           {t('booking.selectDatesDesc', { name: property?.name || t('common.alMalak') })}
         </p>
@@ -922,7 +925,7 @@ export const Booking: React.FC = () => {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="bg-white rounded-[24px] p-4 sm:p-6 shadow-sm border border-primary-navy/5">
+            <div className="glass-card p-4 sm:p-6">
               <div className="flex justify-between items-center mb-4">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-secondary-gold">
                   {pickerMode === 'check_in' ? t('booking.pickCheckIn') : t('booking.pickCheckOut')}
@@ -975,13 +978,14 @@ export const Booking: React.FC = () => {
                       key={day}
                       onClick={() => !isUnavailable && handleDayClick(day)}
                       className={cn(
-                        "py-2 rounded-lg transition-all relative",
+                        "py-2 rounded-lg transition-all duration-300 relative",
                         isUnavailable ? "cursor-not-allowed" : "cursor-pointer hover:bg-primary-navy/5",
                         isPast && !isBooked && "text-primary-navy/20",
                         isBooked && "bg-red-50 text-red-300 line-through",
                         disabledForMode && !isBooked && !isPast && "text-primary-navy/20",
-                        isSelected && !isPast && !isBooked && "bg-primary-navy text-white font-bold",
-                        isInRange && !isUnavailable && "bg-primary-navy/5 text-primary-navy"
+                        // Onyx spec: selected dates render in Amber with white text + glow.
+                        isSelected && !isPast && !isBooked && "bg-[#FFBF00] text-white font-bold amber-glow",
+                        isInRange && !isUnavailable && "bg-[#FFBF00]/15 text-white",
                       )}
                     >
                       {day}
@@ -994,11 +998,11 @@ export const Booking: React.FC = () => {
               <div className="mt-4 flex items-center gap-4 justify-center">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded bg-red-50 border border-red-200"></span>
-                  <span className="text-[9px] font-bold uppercase text-primary-navy/40">{t('booking.legendBooked')}</span>
+                  <span className="text-[9px] font-bold uppercase tracking-architectural text-primary-navy/40">{t('booking.legendBooked')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-primary-navy"></span>
-                  <span className="text-[9px] font-bold uppercase text-primary-navy/40">{t('booking.legendSelected')}</span>
+                  <span className="w-2.5 h-2.5 rounded bg-[#FFBF00] amber-glow"></span>
+                  <span className="text-[9px] font-bold uppercase tracking-architectural text-primary-navy/40">{t('booking.legendSelected')}</span>
                 </div>
               </div>
             </div>
