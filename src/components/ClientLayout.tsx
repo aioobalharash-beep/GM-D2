@@ -33,35 +33,50 @@ export const ClientLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-pearl-white flex flex-col">
-      {/* Client Top Bar — single row that scales from a logo-only tile on
-          phones to the full chalet wordmark from md upwards. The brand lockup
-          is allowed to shrink/truncate so the property toggle never overflows. */}
-      <header className="fixed top-0 w-full z-50 bg-pearl-white/90 backdrop-blur-xl shadow-[0px_10px_30px_rgba(1,31,54,0.04)] px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
+    // `data-theme="onyx"` scopes the dark canvas + heading colors so the
+    // admin portal (which keeps the brand-navy palette) is unaffected.
+    <div data-theme="onyx" className="min-h-screen bg-[#121212] text-[#A0A0A0] flex flex-col">
+      {/* Onyx Header — translucent matte-black glass with a hairline
+          divider; the wordmark uses architectural tracking for a watch-brand
+          feel. The brand lockup is allowed to shrink so the property toggle
+          never overflows. */}
+      <header
+        className="fixed top-0 w-full z-50 h-16 px-3 sm:px-6 flex items-center justify-between gap-2
+                   bg-[#121212]/75 backdrop-blur-xl
+                   border-b border-white/[0.08]
+                   shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+      >
         <Link
           to="/"
           aria-label={config.chaletName}
-          className="flex items-center gap-2 min-w-0 shrink"
+          className="flex items-center gap-3 min-w-0 shrink group"
         >
           {config.logoPath && (
             <img
               src={config.logoPath}
               alt=""
-              className="h-9 w-9 rounded-md object-contain bg-white/60 p-0.5 shrink-0"
+              className="h-9 w-9 rounded-md object-contain bg-white/5 ring-1 ring-white/10 p-0.5 shrink-0
+                         transition-shadow duration-500 group-hover:shadow-[0_0_18px_rgba(255,191,0,0.35)]"
               onError={(e) => { (e.currentTarget.style.display = 'none'); }}
             />
           )}
-          <span className="hidden md:inline font-headline text-xl font-bold text-primary-navy tracking-widest uppercase truncate">
+          <span
+            className="hidden md:inline font-display text-lg font-extrabold uppercase truncate
+                       text-white tracking-architectural
+                       transition-colors duration-500 group-hover:text-[#FFBF00]"
+          >
             {t('common.alMalak')}
           </span>
         </Link>
+
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          <PropertyToggle variant="light" />
+          {/* High-end segmented control — sliding amber background. */}
+          <PropertyToggle variant="onyx" />
           <LanguageToggle />
           {isAdmin && (
             <button
               onClick={() => navigate('/admin')}
-              className="p-2 rounded-full hover:bg-primary-navy/5 text-primary-navy/40 transition-colors"
+              className="p-2 rounded-full text-[#A0A0A0] hover:text-[#FFBF00] hover:bg-white/5 transition-colors duration-500"
               title={t('nav.adminPortal')}
               aria-label={t('nav.adminPortal')}
             >
@@ -71,7 +86,9 @@ export const ClientLayout: React.FC = () => {
           {user ? (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-xl hover:bg-primary-navy/5 text-primary-navy transition-colors text-xs font-bold uppercase tracking-wider"
+              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-xl
+                         text-[#A0A0A0] hover:text-white hover:bg-white/5
+                         transition-colors duration-500 text-xs font-bold uppercase tracking-architectural"
               title={t('nav.logout')}
               aria-label={t('nav.logout')}
             >
@@ -81,7 +98,10 @@ export const ClientLayout: React.FC = () => {
           ) : (
             <button
               onClick={() => navigate('/login')}
-              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-xl bg-primary-navy text-white text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
+              className="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-xl
+                         bg-[#FFBF00] text-black text-xs font-bold uppercase tracking-architectural
+                         amber-glow hover:bg-[#FFD15C] hover:shadow-[0_0_28px_rgba(255,191,0,0.55)]
+                         transition-all duration-500 active:scale-[0.97]"
               title={t('nav.login')}
               aria-label={t('nav.login')}
             >
@@ -100,23 +120,36 @@ export const ClientLayout: React.FC = () => {
         <Footer />
       </main>
 
-      {/* Client Bottom Nav */}
-      <nav className="fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-20 pb-safe px-12 bg-pearl-white border-t border-primary-navy/5 shadow-[0px_-10px_40px_rgba(1,31,54,0.06)] rounded-t-[20px]">
-        {navItems.map((item) => (
-          <button
-            key={item.path}
-            onClick={() => navigate(item.path)}
-            className={cn(
-              "flex flex-col items-center justify-center transition-all duration-300",
-              isActive(item.path)
-                ? "text-secondary-gold font-bold scale-105"
-                : "text-primary-navy/40"
-            )}
-          >
-            <item.icon size={24} fill={isActive(item.path) ? "currentColor" : "none"} />
-            <span className="text-[11px] font-medium tracking-wide mt-1">{t(item.labelKey)}</span>
-          </button>
-        ))}
+      {/* Onyx Bottom Nav — layered surface, amber active state with glow. */}
+      <nav
+        className="fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-20 pb-safe px-12
+                   bg-[#1D1D1D]/90 backdrop-blur-xl
+                   border-t border-white/[0.08]
+                   shadow-[0_-10px_40px_rgba(0,0,0,0.6)]
+                   rounded-t-[20px]"
+      >
+        {navItems.map((item) => {
+          const active = isActive(item.path);
+          return (
+            <button
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              className={cn(
+                'flex flex-col items-center justify-center transition-all duration-500',
+                active ? 'text-[#FFBF00] scale-110' : 'text-[#6B6B6B] hover:text-[#A0A0A0]',
+              )}
+            >
+              <item.icon
+                size={24}
+                fill={active ? 'currentColor' : 'none'}
+                className={active ? 'drop-shadow-[0_0_8px_rgba(255,191,0,0.55)]' : ''}
+              />
+              <span className="text-[11px] font-bold uppercase tracking-architectural mt-1">
+                {t(item.labelKey)}
+              </span>
+            </button>
+          );
+        })}
       </nav>
     </div>
   );

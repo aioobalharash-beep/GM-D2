@@ -6,7 +6,7 @@ import { useProperty } from '../contexts/PropertyContext';
 import { useTranslation } from 'react-i18next';
 import { bl } from '../utils/bilingual';
 
-export type PropertyToggleVariant = 'light' | 'dark';
+export type PropertyToggleVariant = 'light' | 'dark' | 'onyx';
 
 interface PropertyToggleProps {
   /** Visual style — `light` for bright headers, `dark` for navy headers. */
@@ -70,7 +70,19 @@ export const PropertyToggle: React.FC<PropertyToggleProps> = ({
 
   const usePillLayout = layout === 'auto' && properties.length === 2;
 
-  const baseColors = variant === 'dark'
+  // `onyx` is the Onyx & Amber variant — black track, amber slider, white text.
+  const baseColors = variant === 'onyx'
+    ? {
+        track: 'bg-[#1D1D1D] border border-white/10 backdrop-blur-md',
+        inactive: 'text-[#A0A0A0] hover:text-white',
+        activeBg: 'bg-[#FFBF00] amber-glow',
+        activeText: 'text-white',
+        chevron: 'text-[#A0A0A0]',
+        menuBg: 'bg-[#1D1D1D] text-white border border-white/10 shadow-2xl backdrop-blur-md',
+        menuItem: 'text-[#A0A0A0] hover:bg-white/5 hover:text-white',
+        menuItemActive: 'bg-[#FFBF00]/15 text-[#FFBF00]',
+      }
+    : variant === 'dark'
     ? {
         track: 'bg-white/10 border border-white/15',
         inactive: 'text-white/70 hover:text-white',
@@ -100,7 +112,7 @@ export const PropertyToggle: React.FC<PropertyToggleProps> = ({
         className={cn(
           // Equal-width grid columns keep both pills the same size so the
           // animated active background doesn't jump width when switching.
-          'relative inline-grid grid-cols-2 items-center rounded-full p-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider',
+          'relative inline-grid grid-cols-2 items-center rounded-full p-1 text-[11px] sm:text-xs font-bold uppercase tracking-architectural',
           baseColors.track,
           className,
         )}
@@ -115,14 +127,16 @@ export const PropertyToggle: React.FC<PropertyToggleProps> = ({
               aria-selected={isActive}
               onClick={() => setActivePropertyId(p.id)}
               className={cn(
-                'relative whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full transition-colors duration-200 z-10',
+                'relative whitespace-nowrap px-4 sm:px-6 py-2 rounded-full transition-colors duration-500 z-10',
                 isActive ? baseColors.activeText : baseColors.inactive,
               )}
             >
               {isActive && (
                 <motion.span
                   layoutId="property-toggle-pill"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  // duration-500 spec — eased instead of springy for a calmer,
+                  // luxury feel that matches the rest of the Onyx UI.
+                  transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
                   className={cn('absolute inset-0 rounded-full -z-10', baseColors.activeBg)}
                 />
               )}

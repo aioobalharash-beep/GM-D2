@@ -264,32 +264,32 @@ export const Sanctuary: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-8 pb-12 animate-pulse">
+      <div className="space-y-8 pb-12 animate-pulse bg-[#121212] min-h-screen">
         <div className="px-6 mt-8 space-y-4">
-          <div className="h-4 bg-primary-navy/5 rounded w-32" />
-          <div className="h-8 bg-primary-navy/5 rounded w-64" />
+          <div className="h-4 bg-white/[0.06] rounded w-32" />
+          <div className="h-8 bg-white/[0.06] rounded w-64" />
           <div className="flex gap-4 overflow-hidden">
             {[1, 2, 3].map(i => (
               <div key={i} className="flex-none w-[85vw] md:w-[600px]">
-                <div className="aspect-[4/5] md:aspect-video rounded-[20px] bg-primary-navy/5" />
-                <div className="mt-3 h-3.5 bg-primary-navy/5 rounded w-40 mx-1" />
+                <div className="aspect-[4/5] md:aspect-video rounded-[20px] bg-white/[0.04]" />
+                <div className="mt-3 h-3.5 bg-white/[0.06] rounded w-40 mx-1" />
               </div>
             ))}
           </div>
         </div>
         <div className="px-6 space-y-3">
-          <div className="h-6 bg-primary-navy/5 rounded w-48" />
-          <div className="h-4 bg-primary-navy/5 rounded w-full" />
-          <div className="h-4 bg-primary-navy/5 rounded w-3/4" />
+          <div className="h-6 bg-white/[0.06] rounded w-48" />
+          <div className="h-4 bg-white/[0.06] rounded w-full" />
+          <div className="h-4 bg-white/[0.06] rounded w-3/4" />
         </div>
         <div className="px-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-full bg-white p-6 rounded-2xl border border-primary-navy/5 shadow-sm space-y-4">
-              <div className="h-5 bg-primary-navy/5 rounded w-24" />
+            <div key={i} className="h-full glass-card p-6 space-y-4">
+              <div className="h-5 bg-white/[0.06] rounded w-24" />
               <div className="space-y-2.5">
-                <div className="h-4 bg-primary-navy/5 rounded w-full" />
-                <div className="h-4 bg-primary-navy/5 rounded w-3/4" />
-                <div className="h-4 bg-primary-navy/5 rounded w-5/6" />
+                <div className="h-4 bg-white/[0.06] rounded w-full" />
+                <div className="h-4 bg-white/[0.06] rounded w-3/4" />
+                <div className="h-4 bg-white/[0.06] rounded w-5/6" />
               </div>
             </div>
           ))}
@@ -298,61 +298,99 @@ export const Sanctuary: React.FC = () => {
     );
   }
 
+  const heroImage = data.gallery?.[0]?.url;
+  const heroPrice = getMinPrice(data.pricing, data.nightly_rate);
+
   return (
-    <div className="space-y-12 pb-12">
-      {/* Hero Gallery — keyed by active property so React tears down + re-mounts
-          the section on switch, giving guests a clear visual transition. */}
+    <div className="space-y-14 pb-16 bg-[#121212]">
+      {/* Hero — full-bleed immersive image with a dark gradient overlay so
+          the white headline pops. Re-mounts on property switch for a clean
+          visual transition. */}
       <motion.section
         key={activePropertyId || 'default'}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25 }}
-        className="px-6 mt-8"
+        transition={{ duration: 0.4 }}
+        className="relative w-full h-[72vh] min-h-[480px] overflow-hidden"
       >
-        <div className="flex justify-between items-end mb-6">
-          <div>
-            <span className="text-secondary-gold font-bold tracking-widest text-[10px] uppercase block mb-1">{t('sanctuary.estatePreview')}</span>
-            <h2 className="font-headline text-3xl font-bold text-primary-navy">{bl(data.name, lang)}</h2>
+        {heroImage && (
+          <OptimizedImage
+            src={heroImage}
+            alt={bl(data.name, lang) as string}
+            className="absolute inset-0 w-full h-full"
+          />
+        )}
+        <div className="absolute inset-0 hero-overlay" />
+        <div className="absolute inset-x-0 bottom-0 px-6 pb-12 max-w-5xl mx-auto">
+          <span className="text-[#FFBF00] font-bold tracking-architectural text-[10px] uppercase block mb-3 drop-shadow-[0_0_8px_rgba(255,191,0,0.4)]">
+            {t('sanctuary.estatePreview')}
+          </span>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-architectural leading-tight">
+            {bl(data.name, lang)}
+          </h2>
+          <p className="mt-4 max-w-2xl text-[#A0A0A0] text-sm sm:text-base leading-relaxed">
+            {bl(data.description, lang)}
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <button
+              onClick={() => navigate('/booking')}
+              className="inline-flex items-center gap-2 rounded-full
+                         bg-[#FFBF00] text-black px-7 py-3
+                         text-xs font-extrabold uppercase tracking-architectural
+                         amber-glow hover:bg-[#FFD15C] hover:shadow-[0_0_36px_rgba(255,191,0,0.55)]
+                         transition-all duration-500 active:scale-[0.97]"
+            >
+              <CalendarIcon size={16} />
+              {t('sanctuary.bookNow')}
+            </button>
+            <span className="text-xs uppercase tracking-architectural text-[#A0A0A0]">
+              {t('sanctuary.from')}{' '}
+              <span className="text-[#FFBF00] font-bold">{heroPrice} {t('common.omr')}</span>{' '}
+              {t('common.perNight')}
+            </span>
           </div>
         </div>
+      </motion.section>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 pb-4">
+      {/* Gallery strip — dark cards with subtle white borders. */}
+      <section className="px-6 max-w-6xl mx-auto">
+        <h3 className="font-display text-sm font-bold uppercase tracking-architectural text-[#A0A0A0] mb-4">
+          {bl(data.headline, lang)}
+        </h3>
+        <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 pb-2">
           {data.gallery.map((img, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="flex-none w-[85vw] md:w-[600px] snap-center"
+              transition={{ delay: i * 0.08, duration: 0.5 }}
+              whileHover={{ scale: 1.02 }}
+              className="flex-none w-[85vw] md:w-[560px] snap-center glass-card overflow-hidden"
             >
               <OptimizedImage
                 src={img.url}
                 alt={img.label || ''}
-                className="aspect-[4/5] md:aspect-video rounded-[20px] bg-primary-navy/5 shadow-sm"
+                className="aspect-[4/5] md:aspect-video"
               />
               {img.label && img.label.trim() !== '' && (
-                <p className="mt-3 font-bold text-primary-navy/80 text-sm px-1">{img.label}</p>
+                <p className="px-5 py-3 font-bold text-white text-xs uppercase tracking-architectural">
+                  {img.label}
+                </p>
               )}
             </motion.div>
           ))}
         </div>
-      </motion.section>
 
-      {/* Description */}
-      <section className="px-6">
-        <h3 className="font-headline text-xl font-bold mb-4">{bl(data.headline, lang)}</h3>
-        <p className="text-primary-navy/60 leading-relaxed text-sm">{bl(data.description, lang)}</p>
-        <div className="mt-4 text-sm text-primary-navy/60">
-          <span className="font-bold text-secondary-gold">{t('sanctuary.from')} {getMinPrice(data.pricing, data.nightly_rate)} {t('common.omr')}</span> {t('common.perNight')}
-        </div>
         {data.amenities && data.amenities.length > 0 && (
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-2">
             {data.amenities.map((a, i) => (
               <span
                 key={`${activePropertyId}-amenity-${i}`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-secondary-gold/10 text-primary-navy/80 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider"
+                className="inline-flex items-center gap-2 rounded-full
+                           bg-white/[0.04] border border-white/[0.08]
+                           text-[#A0A0A0] px-3 py-1.5 text-[11px] font-bold uppercase tracking-architectural"
               >
-                <Check size={12} className="text-secondary-gold" />
+                <Check size={12} className="icon-amber" />
                 {a}
               </span>
             ))}
@@ -360,10 +398,10 @@ export const Sanctuary: React.FC = () => {
         )}
       </section>
 
-      {/* Resort Guide — Categorized Feature Tiles */}
+      {/* Resort Guide — glassmorphic dark feature tiles, amber icons. */}
       {data.featureSections && data.featureSections.length > 0 && (
-        <section className="px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
+        <section className="px-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
             {data.featureSections.map((section, i) => {
               const title = lang === 'ar' ? (section.titleAr || section.titleEn) : (section.titleEn || section.titleAr);
               return (
@@ -371,20 +409,22 @@ export const Sanctuary: React.FC = () => {
                   key={i}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.05, duration: 0.5 }}
+                  whileHover={{ scale: 1.02, y: -4 }}
                   dir={lang === 'ar' ? 'rtl' : 'ltr'}
-                  className="h-full bg-white p-6 rounded-2xl border border-primary-navy/5 shadow-sm"
+                  className="h-full glass-card p-6 transition-shadow duration-500
+                             hover:shadow-[0_20px_60px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,191,0,0.18)]"
                 >
-                  <h4 className="font-headline text-lg font-bold text-secondary-gold mb-4">
+                  <h4 className="font-display text-sm font-extrabold uppercase tracking-architectural text-[#FFBF00] mb-4">
                     {title}
                   </h4>
-                  <ul className="space-y-2.5">
+                  <ul className="space-y-3">
                     {section.items.map((item, j) => {
                       const label = lang === 'ar' ? (item.ar || item.en) : (item.en || item.ar);
                       return (
                         <li key={j} className="flex items-start gap-3">
-                          <Check size={14} strokeWidth={2.5} className="text-secondary-gold shrink-0 mt-[5px]" />
-                          <span className="text-base font-medium text-primary-navy/85 leading-relaxed">
+                          <Check size={14} strokeWidth={2.5} className="icon-amber shrink-0 mt-[5px]" />
+                          <span className="text-sm font-medium text-[#A0A0A0] leading-relaxed">
                             {label}
                           </span>
                         </li>
@@ -410,13 +450,16 @@ export const Sanctuary: React.FC = () => {
         onAbout={() => navigate('/about')}
       />
 
-      {/* Floating Book Now */}
+      {/* Floating Book Now — amber pill with constant glow. */}
       <button
         onClick={() => navigate('/booking')}
-        className="fixed bottom-[104px] end-[24px] z-[60] flex items-center gap-2 bg-secondary-gold text-primary-navy px-6 py-3.5 rounded-[20px] shadow-[0px_10px_25px_rgba(212,175,55,0.3)] hover:scale-105 transition-transform active:scale-95"
+        className="fixed bottom-[104px] end-[24px] z-[60] flex items-center gap-2
+                   bg-[#FFBF00] text-black px-6 py-3.5 rounded-[20px]
+                   amber-glow-lg hover:bg-[#FFD15C]
+                   transition-transform duration-500 hover:scale-105 active:scale-95"
       >
         <CalendarIcon size={20} />
-        <span className="font-bold text-sm tracking-wide">{t('sanctuary.bookNow')}</span>
+        <span className="font-extrabold text-xs uppercase tracking-architectural">{t('sanctuary.bookNow')}</span>
       </button>
     </div>
   );
